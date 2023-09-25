@@ -6,6 +6,7 @@
  * Available online http://jcgt.org/published/0009/03/02/
  * Code at: https://www.shadertoy.com/view/XlGcRh
  */
+
 #define MAX_UINT 0xffffffffU
 #define MAX_INT  0x7fffffff
 
@@ -25,7 +26,7 @@ uvec4 mapu(vec4 v) { return floatBitsToUint(v); }
 
 /*
  * Inigo Quilez, Integer Hash - III, 2017
- * https://www.shadertoy.com/view/llGSzw
+ * (https://www.shadertoy.com/view/llGSzw)
  */
 uint hash1u(uint v) {
     // integer hash copied from Hugo Elias
@@ -41,7 +42,7 @@ float hash1f(float v) { return mapf(hash1u(mapu(v))); }
 
 /*
  * Inigo Quilez, Integer Hash - III, 2017
- * https://www.shadertoy.com/view/4tXyWN
+ * (https://www.shadertoy.com/view/4tXyWN)
  */
 uint hash1u(uvec2 v) {
     uvec2 q = 1103515245U * ( (v>>1U) ^ (v.yx   ) );

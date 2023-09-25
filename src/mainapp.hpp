@@ -5,9 +5,9 @@
 #include "framework/gl/mesh.hpp"
 #include "framework/gl/program.hpp"
 
-class ExampleApp : public App {
+class MainApp : public App {
 public:
-    ExampleApp();
+    MainApp();
 protected:
     void init();
     void buildImGui();
@@ -16,12 +16,12 @@ protected:
     void scrollCallback(float amount);
     void moveCallback(vec2 movement, bool leftButton, bool rightButton, bool middleButton);
 private:
-    Camera cam;
+    Camera camera;
     Mesh fullscreenTriangle;
-    Program backgroundShader;
+    Program raymarchShader;
     GLuint lRes;
     GLuint lT;
-    Mesh mesh;
-    Program meshShader;
-    GLuint lMVP;
+    GLuint lCameraPosition;
+    GLuint lCameraRotation;
+    GLuint lFocalLength;
 };
