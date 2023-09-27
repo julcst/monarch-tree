@@ -1,5 +1,6 @@
 #pragma once
 
+#include "tree.hpp"
 #include "framework/app.hpp"
 #include "framework/camera.hpp"
 #include "framework/gl/mesh.hpp"
@@ -21,7 +22,14 @@ private:
     Program raymarchShader;
     GLuint lRes;
     GLuint lT;
+    GLuint lFrames;
     GLuint lCameraPosition;
     GLuint lCameraRotation;
     GLuint lFocalLength;
+    GLuint lTree;
+    GLuint lNumBranches;
+    GLuint lAABBCenter;
+    GLuint lAABBSize;
+    Tree::Generator treeGenerator;
+    Tree::Model tree;
 };

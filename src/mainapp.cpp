@@ -15,14 +15,19 @@
 
 using namespace glm;
 
-MainApp::MainApp() : App(800, 600), camera(0.0f, 0.0f, 5.0f, 0.5f, 50.0f) {
+MainApp::MainApp() : App(800, 600), camera(0.0f, 0.0f, 30.0f, 5.0f, 70.0f), treeGenerator(Tree::Config {500, 0.3f, 1.0f}) {
     fullscreenTriangle.load(FULLSCREEN_VERTICES, FULLSCREEN_INDICES);
     raymarchShader.load("screen.vert", "raymarch.frag");
     lRes = raymarchShader.uniform("uRes");
     lT = raymarchShader.uniform("uT");
+    lFrames = raymarchShader.uniform("uFrames");
     lCameraPosition = raymarchShader.uniform("uCameraPosition");
     lCameraRotation = raymarchShader.uniform("uCameraRotation");
     lFocalLength = raymarchShader.uniform("uFocalLength");
+    lTree = raymarchShader.uniform("uBranches");
+    lNumBranches = raymarchShader.uniform("uNumBranches");
+    lAABBCenter = raymarchShader.uniform("uAABBCenter");
+    lAABBSize = raymarchShader.uniform("uAABBSize");
 }
 
 void MainApp::init() {
@@ -31,6 +36,11 @@ void MainApp::init() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+    tree = treeGenerator.generate();
+    raymarchShader.set(lTree, tree.branches.data()->start, tree.branches.size() * 2);
+    raymarchShader.set(lNumBranches, (unsigned int) tree.branches.size());
+    raymarchShader.set(lAABBCenter, tree.aabb.center);
+    raymarchShader.set(lAABBSize, tree.aabb.size);
 }
 
 void MainApp::render() {
@@ -40,6 +50,7 @@ void MainApp::render() {
     raymarchShader.bind();
     raymarchShader.set(lRes, resolution);
     raymarchShader.set(lT, time);
+    raymarchShader.set(lFrames, frames);
     raymarchShader.set(lCameraPosition, camera.getPosition());
     raymarchShader.set(lCameraRotation, camera.calcRotation());
     raymarchShader.set(lFocalLength, 2.0f);
@@ -55,7 +66,7 @@ void MainApp::scrollCallback(float amount) {
 }
 
 void MainApp::moveCallback(vec2 movement, bool leftButton, bool rightButton, bool middleButton) {
-    if(rightButton) camera.rotate(movement * 0.01f);
+    if(rightButton) camera.rotate(movement * 0.02f);
 }
 
 void MainApp::buildImGui() {
