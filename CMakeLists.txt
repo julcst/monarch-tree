@@ -65,10 +65,10 @@ target_link_libraries(imgui_glfw glfw)
 ####################################################################
 # List files
 set(SRC
-    src/aabb.cpp
     src/main.cpp
     src/mainapp.cpp
     src/tree.cpp
+    src/framework/aabb.cpp
     src/framework/app.cpp
     src/framework/camera.cpp
     src/framework/gl/buffer.cpp

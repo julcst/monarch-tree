@@ -4,6 +4,8 @@
  */
 #include "tree.hpp"
 
+#include "framework/aabb.hpp"
+
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/random.hpp>

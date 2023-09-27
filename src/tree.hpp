@@ -4,10 +4,10 @@
  */
 #pragma once
 
+#include "framework/aabb.hpp"
+
 #include <glm/glm.hpp>
 #include <vector>
-
-#include "aabb.hpp"
 
 namespace Tree {
 
