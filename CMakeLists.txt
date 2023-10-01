@@ -81,6 +81,7 @@ set(SHADERS
     shaders/distance.glsl
     shaders/intersection.glsl
     shaders/random.glsl
+    shaders/raycast.frag
     shaders/raymarch.frag
     shaders/scene.glsl
     shaders/screen.vert

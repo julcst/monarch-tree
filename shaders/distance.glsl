@@ -30,7 +30,7 @@ float sdBranch(vec3 p, vec4 a, vec4 b) {
     float k = sign(rr)*rr*rr*x2;
     if( sign(z)*a2*z2>k ) return  sqrt(x2 + z2)        *il2 - b.w;
     if( sign(y)*a2*y2<k ) return  sqrt(x2 + y2)        *il2 - a.w;
-                            return (sqrt(x2*a2*il2)+y*rr)*il2 - a.w;
+                          return (sqrt(x2*a2*il2)+y*rr)*il2 - a.w;
 }
 
 /*

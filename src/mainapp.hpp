@@ -19,7 +19,7 @@ protected:
 private:
     Camera camera;
     Mesh fullscreenTriangle;
-    Program raymarchShader;
+    Program treeShader;
     GLuint lRes;
     GLuint lT;
     GLuint lFrames;

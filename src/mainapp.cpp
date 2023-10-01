@@ -15,19 +15,19 @@
 
 using namespace glm;
 
-MainApp::MainApp() : App(800, 600), camera(0.0f, 0.0f, 30.0f, 5.0f, 70.0f), treeGenerator(Tree::Config {500, 0.3f, 1.0f}) {
+MainApp::MainApp() : App(800, 600), camera(0.0f, 0.0f, 30.0f, 5.0f, 70.0f), treeGenerator(Tree::Config {507, 0.3f, 1.0f}) {
     fullscreenTriangle.load(FULLSCREEN_VERTICES, FULLSCREEN_INDICES);
-    raymarchShader.load("screen.vert", "raymarch.frag");
-    lRes = raymarchShader.uniform("uRes");
-    lT = raymarchShader.uniform("uT");
-    lFrames = raymarchShader.uniform("uFrames");
-    lCameraPosition = raymarchShader.uniform("uCameraPosition");
-    lCameraRotation = raymarchShader.uniform("uCameraRotation");
-    lFocalLength = raymarchShader.uniform("uFocalLength");
-    lTree = raymarchShader.uniform("uBranches");
-    lNumBranches = raymarchShader.uniform("uNumBranches");
-    lAABBCenter = raymarchShader.uniform("uAABBCenter");
-    lAABBSize = raymarchShader.uniform("uAABBSize");
+    treeShader.load("screen.vert", "raycast.frag");
+    lRes = treeShader.uniform("uRes");
+    lT = treeShader.uniform("uT");
+    lFrames = treeShader.uniform("uFrames");
+    lCameraPosition = treeShader.uniform("uCameraPosition");
+    lCameraRotation = treeShader.uniform("uCameraRotation");
+    lFocalLength = treeShader.uniform("uFocalLength");
+    lTree = treeShader.uniform("uBranches");
+    lNumBranches = treeShader.uniform("uNumBranches");
+    lAABBCenter = treeShader.uniform("uAABBCenter");
+    lAABBSize = treeShader.uniform("uAABBSize");
 }
 
 void MainApp::init() {
@@ -37,23 +37,23 @@ void MainApp::init() {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
     tree = treeGenerator.generate();
-    raymarchShader.set(lTree, tree.branches.data()->start, tree.branches.size() * 2);
-    raymarchShader.set(lNumBranches, (unsigned int) tree.branches.size());
-    raymarchShader.set(lAABBCenter, tree.aabb.center);
-    raymarchShader.set(lAABBSize, tree.aabb.size);
+    treeShader.set(lTree, tree.branches.data()->start, tree.branches.size() * 2);
+    treeShader.set(lNumBranches, (unsigned int) tree.branches.size());
+    treeShader.set(lAABBCenter, tree.aabb.center);
+    treeShader.set(lAABBSize, tree.aabb.size);
 }
 
 void MainApp::render() {
     glClear(GL_DEPTH_BUFFER_BIT);
     // Render color pattern in the background
     glDepthMask(GL_FALSE);
-    raymarchShader.bind();
-    raymarchShader.set(lRes, resolution);
-    raymarchShader.set(lT, time);
-    raymarchShader.set(lFrames, frames);
-    raymarchShader.set(lCameraPosition, camera.getPosition());
-    raymarchShader.set(lCameraRotation, camera.calcRotation());
-    raymarchShader.set(lFocalLength, 2.0f);
+    treeShader.bind();
+    treeShader.set(lRes, resolution);
+    treeShader.set(lT, time);
+    treeShader.set(lFrames, frames);
+    treeShader.set(lCameraPosition, camera.getPosition());
+    treeShader.set(lCameraRotation, camera.calcRotation());
+    treeShader.set(lFocalLength, 2.0f);
     fullscreenTriangle.draw();
 }
 

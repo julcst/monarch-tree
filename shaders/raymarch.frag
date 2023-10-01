@@ -25,7 +25,7 @@ vec2 raymarch(vec3 rayOrigin, vec3 rayDirection, float near, float far) {
     for (float steps = 0.0; steps < uSteps; steps++) {
         if (depth > far) return vec2(-1.0, steps); // Break if we exceed far plane
         vec3 p = rayOrigin + depth * rayDirection;
-        float delta = distToScene(p); // Get distance to scene
+        float delta = sdScene(p); // Get distance to scene
         if (delta < uEpsilon) return vec2(depth, steps); // Test if we hit the scene
         depth += delta; // Otherwise, advance depth
     }
@@ -41,7 +41,7 @@ void main() {
     vec2 nearFar = iAABB(rayOrigin, rayDirection, uAABBCenter, uAABBSize);
     vec2 result = vec2(-1.0, 0.0);
 
-    if (nearFar.y >= 0.0) {
+    if (!isinf(nearFar.x)) {
         if (hash3u(uvec3(gl_FragCoord.xy, uFrames)).x % 10 == 0) {
             result = raymarch(rayOrigin, rayDirection, nearFar.x, nearFar.y);
         } else discard;
