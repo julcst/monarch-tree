@@ -1,6 +1,7 @@
 #pragma once
 
-#include "tree.hpp"
+#include "tree/generator.hpp"
+#include "tree/model.hpp"
 #include "framework/app.hpp"
 #include "framework/camera.hpp"
 #include "framework/gl/mesh.hpp"

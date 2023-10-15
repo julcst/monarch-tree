@@ -39,8 +39,9 @@ void MainApp::init() {
     tree = treeGenerator.generate();
     treeShader.set(lTree, tree.branches.data()->start, tree.branches.size() * 2);
     treeShader.set(lNumBranches, (unsigned int) tree.branches.size());
-    treeShader.set(lAABBCenter, tree.aabb.center);
-    treeShader.set(lAABBSize, tree.aabb.size);
+    AABB aabb = tree.aabb.build();
+    treeShader.set(lAABBCenter, aabb.center);
+    treeShader.set(lAABBSize, aabb.size);
 }
 
 void MainApp::render() {
@@ -73,7 +74,27 @@ void MainApp::buildImGui() {
     ImGui::SetNextWindowPos(ImVec2(0, 0));
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 0.5f));
     ImGui::Begin("Statistics", NULL, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoInputs | ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoSavedSettings);
-    ImGui::Text("%2.1ffps avg: %2.1ffps %.0fx%.0f", 1.f / delta, ImGui::GetIO().Framerate, resolution.x, resolution.y);
+    ImGui::Text("%3.1ffps avg:%3.1ffps %.0fx%.0f", 1.f / delta, ImGui::GetIO().Framerate, resolution.x, resolution.y);
     ImGui::PopStyleColor();
+    ImGui::End();
+
+    ImGui::SetNextWindowSize(ImVec2(0, 0));
+    ImGui::Begin("Tree config");
+    bool changed = false;
+    changed |= ImGui::SliderInt("n", (int*) &treeGenerator.config.nBranches, 1, 507);
+    changed |= ImGui::SliderFloat("length", &treeGenerator.config.segmentLength, 0.1f, 1.0f);
+    changed |= ImGui::SliderFloat("forward", &treeGenerator.config.forwardFactor, 0.0f, 1.0f);
+    changed |= ImGui::SliderFloat("up", &treeGenerator.config.upFactor, 0.0f, 1.0f);
+    changed |= ImGui::SliderFloat("random", &treeGenerator.config.randomFactor, 0.0f, 1.0f);
+    changed |= ImGui::SliderFloat("spread", &treeGenerator.config.spreadFactor, 0.0f, 1.0f);
+    ImGui::Checkbox("fixed", &treeGenerator.config.fixedSeed);
+    if (changed) {
+        tree = treeGenerator.generate();
+        treeShader.set(lTree, tree.branches.data()->start, tree.branches.size() * 2);
+        treeShader.set(lNumBranches, (unsigned int) tree.branches.size());
+        AABB aabb = tree.aabb.build();
+        treeShader.set(lAABBCenter, aabb.center);
+        treeShader.set(lAABBSize, aabb.size);
+    }
     ImGui::End();
 }

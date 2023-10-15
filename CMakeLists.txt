@@ -1,4 +1,6 @@
-cmake_minimum_required(VERSION 3.26)
+cmake_minimum_required(VERSION 3.27)
+
+set(CMAKE_WARN_DEPRECATED OFF CACHE BOOL "" FORCE)
 
 if(APPLE)
     set(CMAKE_OSX_ARCHITECTURES x86_64;arm64)
@@ -67,7 +69,9 @@ target_link_libraries(imgui_glfw glfw)
 set(SRC
     src/main.cpp
     src/mainapp.cpp
-    src/tree.cpp
+    src/tree/generator.cpp
+    src/tree/model.cpp
+    src/tree/sdf.cpp
     src/framework/aabb.cpp
     src/framework/app.cpp
     src/framework/camera.cpp
@@ -76,6 +80,11 @@ set(SRC
     src/framework/gl/program.cpp
     src/framework/gl/shader.cpp
     src/framework/gl/vertexarray.cpp
+)
+set(INCLUDE
+    src/
+    src/tree/
+    src/framework/
 )
 set(SHADERS
     shaders/distance.glsl
@@ -97,8 +106,10 @@ add_executable(${PROJECT_NAME}
     ${SHADERS}
     ${ICON}
 )
+target_include_directories(${PROJECT_NAME} PUBLIC ${INCLUDE})
 
 target_link_libraries(${PROJECT_NAME} glad glfw glm imgui_glfw)
+
 configure_file("src/framework/config.hpp.in" "src/framework/config.hpp")
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_BINARY_DIR}/src/framework)
 
