@@ -1,13 +1,15 @@
 /*
- * Intersection functions for a.wycasting
+ * Intersection functions for raycasting
  * Derived from Inigo Quilez (https://iquilezles.org/articles/intersectors)
  */
 
-#ifndef INF
 #define INF 1.0/0.0
-#endif
 #define NO_HIT vec4(INF, 0.0, 0.0, 0.0)
 #define NO_HIT2 vec2(INF)
+
+bool hit(float hit) { return !isinf(hit); }
+bool hit(vec2 hit) { return !isinf(hit.x); }
+bool hit(vec4 hit) { return !isinf(hit.x); }
 
 /*
  * Inigo Quilez, Rounded Cone - Intersection, 2018
@@ -16,8 +18,8 @@
  */
 vec4 iBranch(vec3 ro, vec3 rd, vec4 a, vec4 b) {
     vec3  ba = b.xyz - a.xyz;
-	vec3  oa = ro - a.xyz;
-	vec3  ob = ro - b.xyz;
+    vec3  oa = ro - a.xyz;
+    vec3  ob = ro - b.xyz;
     float rr = a.w - b.w;
     float m0 = dot(ba, ba);
     float m1 = dot(ba, oa);
@@ -29,11 +31,11 @@ vec4 iBranch(vec3 ro, vec3 rd, vec4 a, vec4 b) {
     
     // body
     float d2 = m0 - rr*rr;
-	float k2 = d2    - m2*m2;
+    float k2 = d2    - m2*m2;
     float k1 = d2*m3 - m1*m2 + m2*rr*a.w;
     float k0 = d2*m5 - m1*m1 + m1*rr*a.w*2.0 - m0*a.w*a.w;
-	float h = k1*k1 - k0*k2;
-	if(h < 0.0) return NO_HIT;
+    float h = k1*k1 - k0*k2;
+    if(h < 0.0) return NO_HIT;
     float t = (-sqrt(h) - k1) / k2;
     // if(t < 0.0) return NO_HIT;
     float y = m1 - a.w*rr + t*m2;

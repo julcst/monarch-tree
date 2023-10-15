@@ -11,9 +11,6 @@ uniform float uFocalLength; // Focal length of the camera
 uniform vec3 uAABBCenter;
 uniform vec3 uAABBSize;
 
-#include "random.glsl"
-#include "intersection.glsl"
-#include "distance.glsl"
 #include "scene.glsl"
 
 void main() {
@@ -24,5 +21,5 @@ void main() {
 
     float d = iScene(rayOrigin, rayDirection);
 
-    fragColor = isinf(d) ? vec4(abs(rayDirection), 1.0) : vec4(vec3(0.0), 1.0);
+    fragColor = hit(d) ? vec4(vec3(0.0), 1.0) : vec4(abs(rayDirection), 1.0);
 }

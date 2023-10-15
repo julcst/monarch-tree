@@ -1,6 +1,8 @@
 /*
  * The scene to be rendered
  */
+#include "distance.glsl"
+#include "intersection.glsl"
 
 uniform vec4[1014] uBranches;
 uniform uint uNumBranches;

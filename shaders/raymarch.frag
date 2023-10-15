@@ -15,7 +15,6 @@ float uSteps = 100.0;
 float uEpsilon = 0.01;
 
 #include "random.glsl"
-#include "distance.glsl"
 #include "intersection.glsl"
 #include "scene.glsl"
 
