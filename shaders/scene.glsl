@@ -15,14 +15,14 @@ float sdScene(vec3 p) {
     return dist;
 }
 
-float iScene(vec3 ro, vec3 rd) {
+vec4 iScene(vec3 ro, vec3 rd) {
     vec2 hitAABB = iAABB(ro, rd, uAABBCenter, uAABBSize);
-    if (isinf(hitAABB.x)) return INF;
+    if (!isHit(hitAABB)) return NO_HIT;
     else {
-        float hitTree = INF;
+        vec4 hitTree = NO_HIT;
         for (uint i = 0; i < uNumBranches; i++) {
             vec4 hitBranch = iBranch(ro, rd, uBranches[i * 2], uBranches[i * 2 + 1]);
-            hitTree = min(hitTree, hitBranch.x);
+            if (hitBranch.x < hitTree.x) hitTree = hitBranch;
         }
         return hitTree;
     }

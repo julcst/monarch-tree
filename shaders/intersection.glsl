@@ -7,9 +7,9 @@
 #define NO_HIT vec4(INF, 0.0, 0.0, 0.0)
 #define NO_HIT2 vec2(INF)
 
-bool hit(float hit) { return !isinf(hit); }
-bool hit(vec2 hit) { return !isinf(hit.x); }
-bool hit(vec4 hit) { return !isinf(hit.x); }
+bool isHit(float hit) { return !isinf(hit); }
+bool isHit(vec2 hit) { return !isinf(hit.x); }
+bool isHit(vec4 hit) { return !isinf(hit.x); }
 
 /*
  * Inigo Quilez, Rounded Cone - Intersection, 2018

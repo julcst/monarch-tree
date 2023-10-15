@@ -19,7 +19,14 @@ void main() {
     vec3 rayOrigin = uCameraPosition;
     vec3 rayDirection = uCameraRotation * normalize(vec3(uv, uFocalLength));
 
-    float d = iScene(rayOrigin, rayDirection);
+    vec4 hit = iScene(rayOrigin, rayDirection);
 
-    fragColor = hit(d) ? vec4(vec3(0.0), 1.0) : vec4(abs(rayDirection), 1.0);
+    if (isHit(hit)) {
+        float d = hit.x;
+        vec3 n = hit.yzw;
+
+        fragColor = vec4(n, 1.0);
+    } else {
+        fragColor = vec4(abs(rayDirection), 1.0);
+    }
 }
