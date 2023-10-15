@@ -11,9 +11,6 @@
 #include <limits>
 #include <vector>
 
-#include <glm/gtx/string_cast.hpp>
-#include <iostream>
-
 using namespace glm;
 using namespace Tree;
 

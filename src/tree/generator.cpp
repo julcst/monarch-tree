@@ -8,9 +8,6 @@
 #include <glm/gtc/constants.hpp>
 #include <glm/gtc/random.hpp>
 
-#include <iostream>
-#include <glm/gtx/string_cast.hpp>
-
 #include <queue>
 
 using namespace glm;
