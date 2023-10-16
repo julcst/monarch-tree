@@ -66,7 +66,7 @@ void MainApp::scrollCallback(float amount) {
     camera.zoom(amount);
 }
 
-void MainApp::moveCallback(vec2 movement, bool leftButton, bool rightButton, bool middleButton) {
+void MainApp::moveCallback(const vec2& movement, bool leftButton, bool rightButton, bool middleButton) {
     if(rightButton) camera.rotate(movement * 0.02f);
 }
 
@@ -77,7 +77,7 @@ void MainApp::buildImGui() {
     ImGui::Text("%3.1ffps avg:%3.1ffps %.0fx%.0f", 1.f / delta, ImGui::GetIO().Framerate, resolution.x, resolution.y);
     ImGui::PopStyleColor();
     ImGui::End();
-
+    
     ImGui::SetNextWindowSize(ImVec2(0, 0));
     ImGui::Begin("Tree config");
     bool changed = false;

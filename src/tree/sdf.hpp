@@ -4,7 +4,7 @@
 
 class SDF {
 public:
-    virtual float calcSignedDistance(glm::vec3 position) = 0;
-    glm::vec3 calcGradient(glm::vec3 position);
-    glm::vec3 calcNormal(glm::vec3 position);
+    virtual float calcSignedDistance(const glm::vec3& position) const = 0;
+    glm::vec3 calcGradient(const glm::vec3& position) const;
+    glm::vec3 calcNormal(const glm::vec3& position) const;
 };

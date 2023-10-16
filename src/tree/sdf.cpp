@@ -16,13 +16,13 @@ const vec3 SAMPLES[] = {
  * Calculate gradient using tetrahedron method as pointed out by Inigo Quilez
  * (https://iquilezles.org/articles/normalsSDF/) to reduce the number of evaluations
  */
-vec3 SDF::calcGradient(const vec3 position) {
+vec3 SDF::calcGradient(const vec3& position) const {
     return SAMPLES[0] * calcSignedDistance(position + EPS * SAMPLES[0])
          + SAMPLES[1] * calcSignedDistance(position + EPS * SAMPLES[1])
          + SAMPLES[2] * calcSignedDistance(position + EPS * SAMPLES[2])
          + SAMPLES[3] * calcSignedDistance(position + EPS * SAMPLES[3]);
 }
 
-vec3 SDF::calcNormal(const vec3 position) {
+vec3 SDF::calcNormal(const vec3& position) const {
     return normalize(calcGradient(position));
 }

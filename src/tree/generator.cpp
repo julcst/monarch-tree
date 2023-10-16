@@ -13,7 +13,7 @@
 using namespace glm;
 using namespace Tree;
 
-Generator::Generator(Config config, unsigned int seed) : config(config), seed(seed) {}
+Generator::Generator(const Config& config, unsigned int seed) : config(config), seed(seed) {}
 
 float area(float radius) { return pi<float>() * radius * radius; }
 float radius(float area) { return sqrt(area / pi<float>()); }

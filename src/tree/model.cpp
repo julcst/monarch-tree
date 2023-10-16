@@ -14,7 +14,7 @@
 using namespace glm;
 using namespace Tree;
 
-void Model::addBranch(Branch branch) {
+void Model::addBranch(const Branch& branch) {
     aabb.add(branch.start);
     aabb.add(branch.end);
     branches.push_back(branch);
@@ -25,7 +25,7 @@ void Model::addBranch(Branch branch) {
  * (https://www.shadertoy.com/view/tdXGWr)
  * Published 2018 by Inigo Quilez under MIT License
  */
-float sdBranch(vec3 p, Branch branch) {
+float sdBranch(const vec3& p, const Branch& branch) {
     // sampling independent computations (only depend on shape)
     vec3  ba = vec3(branch.end) - vec3(branch.start);
     float l2 = dot(ba, ba);
@@ -49,7 +49,7 @@ float sdBranch(vec3 p, Branch branch) {
                           return (sqrt(x2*a2*il2)+y*rr)*il2 - branch.start.w;
 }
 
-float Model::calcSignedDistance(vec3 position) {
+float Model::calcSignedDistance(const vec3& position) const {
     float dist = 1000.f;//std::numeric_limits<float>::infinity();
     for (Branch branch : branches) {
         dist = min(dist, sdBranch(position, branch));

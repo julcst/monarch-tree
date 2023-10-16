@@ -20,13 +20,12 @@ public:
     Program(Program&& other);
     Program& operator=(Program&& other);
     ~Program();
-    void release();
-    void load(std::string vs, std::string fs);
+    void load(const std::string& vs, const std::string& fs);
     void attach(Shader shader);
-    void attach(std::string filename, GLuint type);
+    void attach(const std::string& filename, GLuint type);
     void link();
     void bind();
-    GLuint uniform(std::string name);
+    GLuint uniform(const std::string& name);
     void set(GLuint loc, int value);
     void set(GLuint loc, unsigned int value);
     void set(GLuint loc, float value);
@@ -42,4 +41,5 @@ public:
 private:
     GLuint handle;
     std::list<Shader> shaders;
+    void release();
 };

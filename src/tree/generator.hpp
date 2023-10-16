@@ -37,7 +37,7 @@ namespace Tree {
     class Generator {
     public:
         Config config;
-        Generator(Config config, unsigned int seed = 42);
+        Generator(const Config& config, unsigned int seed = 42);
         Model generate();
     private:
         unsigned int seed;

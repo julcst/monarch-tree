@@ -57,9 +57,9 @@ protected:
     virtual void buildImGui();
     virtual void render();
     virtual void keyCallback(Key key, Action action);
-    virtual void clickCallback(Button button, Action action, vec2 position);
+    virtual void clickCallback(Button button, Action action, const vec2& position);
     virtual void scrollCallback(float amount);
-    virtual void moveCallback(vec2 movement, bool leftButton, bool rightButton, bool middleButton);
+    virtual void moveCallback(const vec2& movement, bool leftButton, bool rightButton, bool middleButton);
 private:
     bool imguiEnabled;
     GLFWwindow* window;

@@ -27,6 +27,6 @@ void main() {
 
         fragColor = vec4(n, 1.0);
     } else {
-        fragColor = vec4(abs(rayDirection), 1.0);
+        fragColor = vec4(abs(rayDirection.zyx), 1.0);
     }
 }

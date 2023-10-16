@@ -16,11 +16,11 @@ public:
     glm::vec3 min;
     glm::vec3 max;
     AABBBuilder();
-    AABBBuilder(glm::vec3 origin);
-    AABBBuilder(glm::vec4 sphere);
-    void add(glm::vec3 point);
-    void add(glm::vec4 sphere);
-    void add(AABB other);
-    void add(AABBBuilder other);
-    AABB build();
+    AABBBuilder(const glm::vec3& origin);
+    AABBBuilder(const glm::vec4& sphere);
+    void add(const glm::vec3& point);
+    void add(const glm::vec4& sphere);
+    void add(const AABB& other);
+    void add(const AABBBuilder& other);
+    AABB build() const;
 };
