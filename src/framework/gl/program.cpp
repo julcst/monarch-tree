@@ -87,6 +87,10 @@ void Program::set(GLuint loc, unsigned int value) {
     glProgramUniform1ui(handle, loc, value);
 }
 
+void Program::set(GLuint loc, size_t value) {
+    glProgramUniform1ui(handle, loc, value);
+}
+
 void Program::set(GLuint loc, float value) {
     glProgramUniform1f(handle, loc, value);
 }

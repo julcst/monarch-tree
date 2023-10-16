@@ -11,7 +11,7 @@
 
 using namespace glm;
 
-App::App(int width, int height) : resolution(width, height), time(0.f), delta(0.f), frames(0), imguiEnabled(true) {
+App::App(unsigned int width, unsigned int height) : resolution(width, height), time(0.f), delta(0.f), frames(0), imguiEnabled(true) {
     initGLFW();
     initImGui();
     initGL();

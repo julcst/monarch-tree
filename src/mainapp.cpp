@@ -38,7 +38,7 @@ void MainApp::init() {
     glCullFace(GL_BACK);
     tree = treeGenerator.generate();
     treeShader.set(lTree, tree.branches.data()->start, tree.branches.size() * 2);
-    treeShader.set(lNumBranches, (unsigned int) tree.branches.size());
+    treeShader.set(lNumBranches, tree.branches.size());
     AABB aabb = tree.aabb.build();
     treeShader.set(lAABBCenter, aabb.center);
     treeShader.set(lAABBSize, aabb.size);
@@ -81,7 +81,7 @@ void MainApp::buildImGui() {
     ImGui::SetNextWindowSize(ImVec2(0, 0));
     ImGui::Begin("Tree config");
     bool changed = false;
-    changed |= ImGui::SliderInt("n", (int*) &treeGenerator.config.nBranches, 1, 507);
+    changed |= ImGui::SliderInt("n", reinterpret_cast<int*>(&treeGenerator.config.nBranches), 1, 507);
     changed |= ImGui::SliderFloat("length", &treeGenerator.config.segmentLength, 0.1f, 1.0f);
     changed |= ImGui::SliderFloat("forward", &treeGenerator.config.forwardFactor, 0.0f, 1.0f);
     changed |= ImGui::SliderFloat("up", &treeGenerator.config.upFactor, 0.0f, 1.0f);
@@ -91,7 +91,7 @@ void MainApp::buildImGui() {
     if (changed) {
         tree = treeGenerator.generate();
         treeShader.set(lTree, tree.branches.data()->start, tree.branches.size() * 2);
-        treeShader.set(lNumBranches, (unsigned int) tree.branches.size());
+        treeShader.set(lNumBranches, tree.branches.size());
         AABB aabb = tree.aabb.build();
         treeShader.set(lAABBCenter, aabb.center);
         treeShader.set(lAABBSize, aabb.size);

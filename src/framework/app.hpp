@@ -43,7 +43,7 @@ public:
     float delta;
     unsigned int frames;
     vec2 mouse;
-    App(int width, int height);
+    App(unsigned int width, unsigned int height);
     App(const App&) = delete;
     App& operator=(const App&) = delete;
     App(App&& other) = delete;

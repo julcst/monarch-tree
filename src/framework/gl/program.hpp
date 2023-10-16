@@ -28,6 +28,7 @@ public:
     GLuint uniform(const std::string& name);
     void set(GLuint loc, int value);
     void set(GLuint loc, unsigned int value);
+    void set(GLuint loc, size_t value);
     void set(GLuint loc, float value);
     void set(GLuint loc, const glm::ivec2& value);
     void set(GLuint loc, const glm::vec2& value);
