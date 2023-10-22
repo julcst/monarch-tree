@@ -35,12 +35,12 @@ vec4 iBranch(vec3 ro, vec3 rd, vec4 a, vec4 b) {
     float k1 = d2*m3 - m1*m2 + m2*rr*a.w;
     float k0 = d2*m5 - m1*m1 + m1*rr*a.w*2.0 - m0*a.w*a.w;
     float h = k1*k1 - k0*k2;
-    if(h < 0.0) return NO_HIT;
+    if (h < 0.0) return NO_HIT;
     float t = (-sqrt(h) - k1) / k2;
-    // if(t < 0.0) return NO_HIT;
+    if (t < 0.0) return NO_HIT;
     float y = m1 - a.w*rr + t*m2;
     if (y > 0.0 && y < d2) return vec4(t, normalize(d2*(oa + t*rd) - ba*y));
-
+    
     // caps
     float h1 = m3*m3 - m5 + a.w*a.w;
     float h2 = m6*m6 - m7 + b.w*b.w;
