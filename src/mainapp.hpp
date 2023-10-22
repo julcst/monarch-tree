@@ -21,8 +21,7 @@ private:
     Camera camera;
     Mesh fullscreenTriangle;
     Program treeShader;
-    GLuint lRes;
-    GLuint lT;
+    GLuint lAspectRatio;
     GLuint lFrames;
     GLuint lCameraPosition;
     GLuint lCameraRotation;

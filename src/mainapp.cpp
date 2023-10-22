@@ -18,8 +18,7 @@ using namespace glm;
 MainApp::MainApp() : App(800, 600), camera(0.0f, 0.0f, 30.0f, 5.0f, 70.0f), treeGenerator(Tree::Config {507, 0.3f, 1.0f}) {
     fullscreenTriangle.load(FULLSCREEN_VERTICES, FULLSCREEN_INDICES);
     treeShader.load("screen.vert", "raycast.frag");
-    lRes = treeShader.uniform("uRes");
-    lT = treeShader.uniform("uT");
+    lAspectRatio = treeShader.uniform("uAspectRatio");
     lFrames = treeShader.uniform("uFrames");
     lCameraPosition = treeShader.uniform("uCameraPosition");
     lCameraRotation = treeShader.uniform("uCameraRotation");
@@ -49,8 +48,7 @@ void MainApp::render() {
     // Render color pattern in the background
     glDepthMask(GL_FALSE);
     treeShader.bind();
-    treeShader.set(lRes, resolution);
-    treeShader.set(lT, time);
+    treeShader.set(lAspectRatio, resolution.x / resolution.y);
     treeShader.set(lFrames, frames);
     treeShader.set(lCameraPosition, camera.getPosition());
     treeShader.set(lCameraRotation, camera.calcRotation());
