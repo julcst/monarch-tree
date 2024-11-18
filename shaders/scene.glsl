@@ -4,8 +4,13 @@
 #include "distance.glsl"
 #include "intersection.glsl"
 
-uniform vec4[1014] uBranches;
-uniform uint uNumBranches;
+uniform Tree {
+    vec3 uAABBCenter;
+    uint uNumBranches;
+    vec3 uAABBSize;
+    uint padding;
+    vec4[1014] uBranches;
+};
 
 float sdScene(vec3 p) {
     float dist = INF;

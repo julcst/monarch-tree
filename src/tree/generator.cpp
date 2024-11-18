@@ -39,7 +39,7 @@ Model Generator::generate() {
         if (any(isnan(normal))) normal = vec3(0.0f);
 
         // Grow branches from it
-        float radius = 0.f;
+        float radius = 0.0f;
         for (unsigned int i = 0; i < config.branching; i++) {
 
             vec3 growDir = normalize(

@@ -5,7 +5,7 @@
 #pragma once
 
 #include "sdf.hpp"
-#include "framework/aabb.hpp"
+#include "tree/aabb.hpp"
 
 #include <glm/glm.hpp>
 #include <vector>

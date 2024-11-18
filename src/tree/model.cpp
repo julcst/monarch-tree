@@ -4,7 +4,7 @@
  */
 #include "model.hpp"
 
-#include "framework/aabb.hpp"
+#include "tree/aabb.hpp"
 
 #include <glm/glm.hpp>
 

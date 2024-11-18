@@ -5,8 +5,6 @@ out vec4 fragColor;
 ///////////////////// Uniforms /////////////////////
 uniform uint uFrames; // Frame counter
 uniform vec3 uCameraPosition; // Camera position
-uniform vec3 uAABBCenter;
-uniform vec3 uAABBSize;
 
 float uSteps = 100.0;
 float uEpsilon = 0.01;
