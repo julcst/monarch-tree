@@ -32,7 +32,6 @@ MainApp::MainApp() : App(800, 600), treeGenerator(Tree::Config {507, 0.3f, 1.0f}
     treeBuffer.allocate(1024 * sizeof(vec4));
     treeBuffer.bind(0);
 
-    glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
 
@@ -46,14 +45,15 @@ void MainApp::render() {
     glClear(GL_DEPTH_BUFFER_BIT);
 
     if (camera.updateIfChanged()) {
-        treeShader.set("uCameraMatrix", camera.cameraMatrix);
+        treeShader.set("uClipToWorld", inverse(camera.projectionMatrix * camera.viewMatrix));
         treeShader.set("uCameraPosition", camera.worldPosition);
-        treeShader.set("uAspectRatio", camera.aspectRatio);
-        treeShader.set("uFocalLength", camera.focalLength);
     }
     
+    glDisable(GL_DEPTH_TEST);
     treeShader.use();
     fullscreenTriangle.draw();
+
+    glEnable(GL_DEPTH_TEST);
 }
 
 void MainApp::resizeCallback(const vec2& res) {
