@@ -13,7 +13,7 @@
 using namespace glm;
 using namespace Tree;
 
-Generator::Generator(const Config& config, unsigned int seed) : config(config), seed(seed) {}
+Generator::Generator(const Config& config, uint seed) : config(config), seed(seed) {}
 
 float area(float radius) { return pi<float>() * radius * radius; }
 float radius(float area) { return sqrt(area / pi<float>()); }
@@ -26,30 +26,29 @@ Model Generator::generate() {
 
     Model model;
     std::priority_queue<Particle, std::vector<Particle>, decltype(&compare)> particles(compare);
-    particles.push(Particle { config.root, normalize(config.up), config.radius, 0.0f });
+    particles.push(Particle { config.root, config.up, config.radius, 0.0f });
 
-    for (unsigned int i = 0; i < config.nBranches; i++) {
+    for (uint i = 0; i < config.nBranches; i++) {
         // Get youngest particle
-        Particle particle = particles.top();
+        const auto particle = particles.top();
         particles.pop();
         // Grow it
-        vec3 endpoint = particle.position + particle.momentum * config.segmentLength;
+        const auto endpoint = particle.position + particle.momentum * config.segmentLength;
 
-        vec3 normal = model.calcNormal(endpoint);
-        if (any(isnan(normal))) normal = vec3(0.0f);
+        const auto normal = model.calcNormal(endpoint);
 
         // Grow branches from it
         float radius = 0.0f;
-        for (unsigned int i = 0; i < config.branching; i++) {
+        for (uint i = 0; i < config.branching; i++) {
 
-            vec3 growDir = normalize(
+            const auto growDir = normalize(
                 config.forwardFactor * particle.momentum +
                 config.randomFactor * sphericalRand(1.f) +
                 config.spreadFactor * normal +
                 config.upFactor * config.up
             );
 
-            Particle newParticle = Particle {
+            const auto newParticle = Particle {
                 endpoint,
                 growDir,
                 scaleArea(particle.radius, 0.5f),

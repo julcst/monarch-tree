@@ -10,12 +10,13 @@ uniform vec3 uCameraPosition; // Camera position
 
 void main() {
     vec3 rayDirection = normalize(viewDir);
+    Ray ray = Ray(uCameraPosition, rayDirection, 1.0 / rayDirection);
 
-    vec4 hit = iScene(uCameraPosition, rayDirection);
+    vec4 hit = iScene(ray);
     
     if (isHit(hit)) {
         float d = hit.x;
-        vec3 n = hit.yzw * 0.1;
+        vec3 n = hit.yzw;
 
         fragColor = vec4(n * 0.5 + 0.5, 1.0);
     } else {

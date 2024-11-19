@@ -31,7 +31,7 @@ float sdBranch(const vec3& p, const Branch& branch) {
     float l2 = dot(ba, ba);
     float rr = branch.start.w - branch.end.w;
     float a2 = l2 - rr*rr;
-    float il2 = 1.0/l2;
+    float il2 = 1.0 / l2;
         
     // sampling dependant computations
     vec3 pa = p - vec3(branch.start);
@@ -50,7 +50,7 @@ float sdBranch(const vec3& p, const Branch& branch) {
 }
 
 float Model::calcSignedDistance(const vec3& position) const {
-    float dist = 1000.f;//std::numeric_limits<float>::infinity();
+    float dist = std::numeric_limits<float>::infinity();
     for (Branch branch : branches) {
         dist = min(dist, sdBranch(position, branch));
     }

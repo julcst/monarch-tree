@@ -10,16 +10,16 @@ float dot2(vec3 v) { return dot(v, v); }
  * (https://www.shadertoy.com/view/tdXGWr)
  * Published 2018 by Inigo Quilez under MIT License
  */
-float sdBranch(vec3 p, vec4 a, vec4 b) {
+float sdBranch(vec3 p, Branch branch) {
     // sampling independent computations (only depend on shape)
-    vec3  ba = b.xyz - a.xyz;
+    vec3  ba = branch.b.xyz - branch.a.xyz;
     float l2 = dot(ba, ba);
-    float rr = a.w - b.w;
+    float rr = branch.a.w - branch.b.w;
     float a2 = l2 - rr*rr;
     float il2 = 1.0/l2;
         
     // sampling dependant computations
-    vec3 pa = p - a.xyz;
+    vec3 pa = p - branch.a.xyz;
     float y = dot(pa, ba);
     float z = y - l2;
     float x2 = dot2( pa*l2 - ba*y );
@@ -28,9 +28,9 @@ float sdBranch(vec3 p, vec4 a, vec4 b) {
 
     // single square root!
     float k = sign(rr)*rr*rr*x2;
-    if( sign(z)*a2*z2>k ) return  sqrt(x2 + z2)        *il2 - b.w;
-    if( sign(y)*a2*y2<k ) return  sqrt(x2 + y2)        *il2 - a.w;
-                          return (sqrt(x2*a2*il2)+y*rr)*il2 - a.w;
+    if( sign(z)*a2*z2>k ) return  sqrt(x2 + z2)        *il2 - branch.b.w;
+    if( sign(y)*a2*y2<k ) return  sqrt(x2 + y2)        *il2 - branch.a.w;
+                          return (sqrt(x2*a2*il2)+y*rr)*il2 - branch.a.w;
 }
 
 /*

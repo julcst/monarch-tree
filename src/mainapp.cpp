@@ -19,10 +19,9 @@
 using namespace glm;
 
 void uploadTreeData(const Tree::Model& tree, Buffer<GL_UNIFORM_BUFFER>& treeBuffer) {
-    AABB aabb = tree.aabb.build();
-    treeBuffer.set(aabb.center, 0);
+    treeBuffer.set(tree.aabb.min, 0);
     treeBuffer.set(static_cast<uint>(tree.branches.size()), 3 * sizeof(float));
-    treeBuffer.set(aabb.size, sizeof(vec4));
+    treeBuffer.set(tree.aabb.max, sizeof(vec4));
     treeBuffer.set(tree.branches, 2 * sizeof(vec4));
 }
 
@@ -38,6 +37,8 @@ MainApp::MainApp() : App(800, 600), treeGenerator(Tree::Config {507, 0.3f, 1.0f}
     glCullFace(GL_BACK);
 
     tree = treeGenerator.generate();
+    camera.target.y = tree.aabb.min.y + 0.5f * (tree.aabb.max.y - tree.aabb.min.y);
+    camera.invalidate();
     uploadTreeData(tree, treeBuffer);
 }
 
@@ -87,6 +88,8 @@ void MainApp::buildImGui() {
     ImGui::Checkbox("fixed", &treeGenerator.config.fixedSeed);
     if (changed) {
         tree = treeGenerator.generate();
+        camera.target.y = tree.aabb.min.y + 0.5f * (tree.aabb.max.y - tree.aabb.min.y);
+        camera.invalidate();
         uploadTreeData(tree, treeBuffer);
     }
     ImGui::End();

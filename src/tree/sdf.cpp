@@ -4,7 +4,8 @@
 
 using namespace glm;
 
-const float EPS = 0.01f;
+const float EPS = 1e-6f;
+const float INV4EPS = 1.0f / (4.0f * EPS);
 const vec3 SAMPLES[] = {
     vec3( 1.0, -1.0, -1.0),
     vec3(-1.0, -1.0,  1.0),
@@ -17,12 +18,22 @@ const vec3 SAMPLES[] = {
  * (https://iquilezles.org/articles/normalsSDF/) to reduce the number of evaluations
  */
 vec3 SDF::calcGradient(const vec3& position) const {
-    return SAMPLES[0] * calcSignedDistance(position + EPS * SAMPLES[0])
-         + SAMPLES[1] * calcSignedDistance(position + EPS * SAMPLES[1])
-         + SAMPLES[2] * calcSignedDistance(position + EPS * SAMPLES[2])
-         + SAMPLES[3] * calcSignedDistance(position + EPS * SAMPLES[3]);
+    return (SAMPLES[0] * calcSignedDistance(position + EPS * SAMPLES[0])
+          + SAMPLES[1] * calcSignedDistance(position + EPS * SAMPLES[1])
+          + SAMPLES[2] * calcSignedDistance(position + EPS * SAMPLES[2])
+          + SAMPLES[3] * calcSignedDistance(position + EPS * SAMPLES[3])) * INV4EPS;
+}
+
+vec3 normalizeNoNaN(const vec3& v) {
+    float len2 = dot(v, v);
+    return std::isnormal(len2) ? v / std::sqrtf(len2) : vec3(0.0f);
 }
 
 vec3 SDF::calcNormal(const vec3& position) const {
-    return normalize(calcGradient(position));
+    return normalizeNoNaN(
+          SAMPLES[0] * calcSignedDistance(position + EPS * SAMPLES[0])
+        + SAMPLES[1] * calcSignedDistance(position + EPS * SAMPLES[1])
+        + SAMPLES[2] * calcSignedDistance(position + EPS * SAMPLES[2])
+        + SAMPLES[3] * calcSignedDistance(position + EPS * SAMPLES[3])
+    );
 }

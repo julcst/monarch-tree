@@ -29,8 +29,9 @@ vec2 raymarch(vec3 rayOrigin, vec3 rayDirection, float near, float far) {
 void main() {
     vec3 rayDirection = normalize(viewDir);
     vec3 rayOrigin = uCameraPosition;
+    Ray ray = Ray(rayOrigin, rayDirection, 1.0 / rayDirection);
 
-    vec2 nearFar = iAABB(rayOrigin, rayDirection, uAABBCenter, uAABBSize);
+    vec2 nearFar = iAABB(ray, uAABBCenter, uAABBSize);
     vec2 result = vec2(-1.0, 0.0);
 
     if (!isinf(nearFar.x)) {

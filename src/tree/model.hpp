@@ -27,7 +27,7 @@ namespace Tree {
     public:
         void addBranch(const Branch& branch);
         float calcSignedDistance(const glm::vec3& position) const override;
-        AABBBuilder aabb;
+        AABB aabb;
         std::vector<Branch> branches;
     };
 
