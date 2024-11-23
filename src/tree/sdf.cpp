@@ -1,6 +1,7 @@
 #include "sdf.hpp"
 
 #include "glm/glm.hpp"
+#include "util.hpp"
 
 using namespace glm;
 
@@ -22,11 +23,6 @@ vec3 SDF::calcGradient(const vec3& position) const {
           + SAMPLES[1] * calcSignedDistance(position + EPS * SAMPLES[1])
           + SAMPLES[2] * calcSignedDistance(position + EPS * SAMPLES[2])
           + SAMPLES[3] * calcSignedDistance(position + EPS * SAMPLES[3])) * INV4EPS;
-}
-
-vec3 normalizeNoNaN(const vec3& v) {
-    float len2 = dot(v, v);
-    return std::isnormal(len2) ? v / std::sqrtf(len2) : vec3(0.0f);
 }
 
 vec3 SDF::calcNormal(const vec3& position) const {

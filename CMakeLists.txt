@@ -9,6 +9,7 @@ set(SRC
     src/tree/generator.cpp
     src/tree/model.cpp
     src/tree/sdf.cpp
+    src/swarm/swarm.cpp
 )
 
 # Fetch framework

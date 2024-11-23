@@ -18,12 +18,12 @@ struct Branch {
     vec4 b;
 };
 
-uniform Tree {
+layout(std140) uniform Tree {
     vec3 uMin;
     uint uNumBranches;
     vec3 uMax;
     uint padding;
-    Branch[507] uBranches;
+    Branch[1024] uBranches;
 };
 
 #include "distance.glsl"

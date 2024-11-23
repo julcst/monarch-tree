@@ -47,7 +47,7 @@ Model Generator::generate() {
 
             const auto growDir = normalize(
                 config.forwardFactor * particle.momentum +
-                config.randomFactor * sphericalRand(1.f) +
+                config.randomFactor * sphericalRand(1.0f) +
                 config.spreadFactor * normal +
                 config.upFactor * config.up
             );

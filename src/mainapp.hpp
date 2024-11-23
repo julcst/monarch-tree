@@ -1,12 +1,15 @@
 #pragma once
 
-#include "tree/generator.hpp"
-#include "tree/model.hpp"
 #include "framework/app.hpp"
 #include "framework/camera.hpp"
 #include "framework/mesh.hpp"
 #include "framework/gl/program.hpp"
 #include "framework/gl/buffer.hpp"
+
+#include "tree/generator.hpp"
+#include "tree/model.hpp"
+
+#include "swarm/swarm.hpp"
 
 class MainApp : public App {
 public:
@@ -20,9 +23,15 @@ protected:
     void moveCallback(const vec2& movement, bool leftButton, bool rightButton, bool middleButton) override;
 private:
     Camera camera;
+
     Mesh fullscreenTriangle;
     Program treeShader;
     Buffer<GL_UNIFORM_BUFFER> treeBuffer;
     Tree::Generator treeGenerator;
     Tree::Model tree;
+
+    Mesh boidMesh;
+    Program boidShader;
+    Buffer<GL_UNIFORM_BUFFER> swarmBuffer;
+    Swarm swarm;
 };
