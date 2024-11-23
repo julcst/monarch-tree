@@ -4,6 +4,7 @@ out vec4 fragColor;
 
 ///////////////////// Uniforms /////////////////////
 uniform vec3 uCameraPosition; // Camera position
+uniform mat4 uWorldToClip; // World to clip space matrix
 
 #include "scene.glsl"
 
@@ -20,7 +21,9 @@ void main() {
 
         fragColor = vec4(n * 0.5 + 0.5, 1.0);
 
-        gl_FragDepth = 0.0;
+        vec3 worldPos = rayOrigin + rayDirection * d;
+        vec4 clipPos = uWorldToClip * vec4(worldPos, 1.0);
+        gl_FragDepth = (clipPos.z / clipPos.w) * 0.5 + 0.5;
     } else {
         fragColor = vec4(rayDirection * 0.5 + 0.5, 1.0);
         gl_FragDepth = 1.0;

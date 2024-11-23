@@ -54,6 +54,8 @@ MainApp::MainApp() : App(800, 600), treeGenerator(Tree::Config {507, 0.3f, 1.0f}
     camera.worldPosition = vec3(20.0f, 0.0f, 0.0f);
     camera.invalidate();
     uploadTreeData(tree, treeBuffer);
+
+    glEnable(GL_DEPTH_TEST);
 }
 
 void MainApp::render() {
@@ -62,17 +64,20 @@ void MainApp::render() {
     if (camera.updateIfChanged()) {
         treeShader.set("uClipToWorld", inverse(camera.projectionMatrix * camera.viewMatrix));
         treeShader.set("uCameraPosition", camera.worldPosition);
+        treeShader.set("uWorldToClip", camera.projectionMatrix * camera.viewMatrix);
         boidShader.set("uWorldToClip", camera.projectionMatrix * camera.viewMatrix);
     }
     
-    glDisable(GL_DEPTH_TEST);
+    glDepthFunc(GL_ALWAYS);
     treeShader.use();
     fullscreenTriangle.draw();
 
-    swarm.update(delta);
-    swarmBuffer.set(swarm.boids, 0);
+    if (swarm.config.speed > 0.0f) {
+        swarm.update(delta);
+        swarmBuffer.set(swarm.boids, 0);
+    }
 
-    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LESS);
     boidShader.use();
     boidMesh.draw(swarm.config.nBoids);
 }
@@ -140,7 +145,7 @@ void MainApp::buildImGui() {
         changed |= ImGui::SliderFloat("Alignment", &swarm.config.alignmentFactor, 0.0f, 1.0f);
         changed |= ImGui::SliderFloat("Cohesion", &swarm.config.cohesionFactor, 0.0f, 1.0f);
         changed |= ImGui::SliderFloat("Random", &swarm.config.randomFactor, 0.0f, 1.0f);
-        changed |= ImGui::SliderFloat("Forward", &swarm.config.forwardFactor, 0.0f, 10.0f);
+        changed |= ImGui::SliderFloat("Forward", &swarm.config.forwardFactor, 0.0f, 2.0f);
         ImGui::SeparatorText("Interaction");
         changed |= ImGui::SliderFloat("Impact", &swarm.config.fleeFactor, -20.0f, 20.0f);
         ImGui::SeparatorText("Generation");

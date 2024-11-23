@@ -21,7 +21,7 @@ void SpatialHash::add(const Boid b) {
     map[cell].push_back(b);
 }
 
-void SpatialHash::iterateNeighbors(const Boid b, const std::function<void(const Boid)>& callback) {
+inline void SpatialHash::iterateNeighbors(const Boid b, const std::function<void(const Boid)>& callback) {
     const glm::ivec3 gridPosition = glm::floor(b.position / radius);
     for (int x = -1; x <= 1; ++x)
     for (int y = -1; y <= 1; ++y)
