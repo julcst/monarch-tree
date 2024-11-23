@@ -27,7 +27,6 @@ struct Boid {
     float phase;
     glm::vec3 velocity;
     float excitement;
-    Boid(glm::vec3 position, glm::vec3 velocity, float excitement);
 };
 
 class SpatialHash {

@@ -39,10 +39,12 @@ MainApp::MainApp() : App(800, 600), treeGenerator(Tree::Config {507, 0.3f, 1.0f}
 
     const std::vector<float> boidVertices = {
         -0.1f, 0.0f, -0.1f,
-         0.0f, 0.0f,  0.1f,
+        -0.1f, 0.0f,  0.1f,
+         0.0f, 0.0f,  0.0f,
+         0.1f, 0.0f,  0.1f,
          0.1f, 0.0f, -0.1f,
     };
-    const std::vector<uint> boidIndices = {0, 1, 2};
+    const std::vector<uint> boidIndices = {0, 1, 2, 2, 3, 4};
     boidMesh.load(boidVertices, boidIndices);
     boidShader.load("shaders/boid.vert", "shaders/boid.frag");
     boidShader.bindUBO("Swarm", 1);

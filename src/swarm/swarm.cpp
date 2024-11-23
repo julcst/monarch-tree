@@ -33,8 +33,6 @@ inline void SpatialHash::iterateNeighbors(const Boid b, const std::function<void
 
 void SpatialHash::reset(float r) { radius = r; map.clear(); }
 
-Boid::Boid(glm::vec3 position, glm::vec3 velocity, float excitement) : position(position), velocity(velocity), excitement(excitement) {}
-
 /* Simple boid flocking implementation.
  * Based on the amazing paper "Steering Behaviors For Autonomous Characters" by Craig W. Reynolds */
 void Swarm::update(float dt, glm::vec3 ro, glm::vec3 rd, bool flee) {
@@ -43,7 +41,7 @@ void Swarm::update(float dt, glm::vec3 ro, glm::vec3 rd, bool flee) {
     } else if (config.nBoids > boids.size()) {
         boids.reserve(config.nBoids);
         for (unsigned int i = boids.size(); i < config.nBoids; i++) {
-            boids.emplace_back(glm::ballRand(config.spawn.w) + glm::vec3(config.spawn), glm::sphericalRand(1.0f), 0.0f);
+            boids.emplace_back(glm::ballRand(config.spawn.w) + glm::vec3(config.spawn), glm::linearRand(0.0f, two_pi<float>()), glm::sphericalRand(1.0f), 0.0f);
         }
     }
 
@@ -107,6 +105,8 @@ void Swarm::update(float dt, glm::vec3 ro, glm::vec3 rd, bool flee) {
 
         // Move
         boids[i].velocity = normalizeNoNaN(boids[i].velocity * config.forwardFactor + force);
+        boids[i].phase += glm::length(boids[i].velocity) * dt * config.speed;
+        boids[i].phase = mod(boids[i].phase, two_pi<float>());
         boids[i].position = boids[i].position + boids[i].velocity * dt * config.speed;
     }
 }

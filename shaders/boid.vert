@@ -30,6 +30,9 @@ void main() {
     vec3 up = vec3(0.0, 1.0, 0.0);
     mat3 rotation = buildOrthonormalBasis(forward, up);
 
+    vec3 vertex = _position;
+    vertex.y = sin(boid.phase) * abs(vertex.x) * 3.0;
+
     normal = rotation[1];
-    gl_Position = uWorldToClip * vec4(rotation * _position + boid.position, 1.0);
+    gl_Position = uWorldToClip * vec4(rotation * vertex + boid.position, 1.0);
 }
