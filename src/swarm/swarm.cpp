@@ -21,6 +21,7 @@ void SpatialHash::add(const Boid b) {
     map[cell].push_back(b);
 }
 
+// TODO: Use generator
 inline void SpatialHash::iterateNeighbors(const Boid b, const std::function<void(const Boid)>& callback) {
     const glm::ivec3 gridPosition = glm::floor(b.position / radius);
     for (int x = -1; x <= 1; ++x)
@@ -92,7 +93,7 @@ void Swarm::update(float dt, glm::vec3 ro, glm::vec3 rd, bool flee) {
         // Bounding sphere
         glm::vec3 bounddir = glm::vec3(config.bound) - boids[i].position;
         float distbound = glm::length(bounddir) - config.bound.w;
-        if (distbound > 0.f) force += bounddir * distbound * 0.001f;
+        if (distbound > 0.0f) force += bounddir * distbound * 0.001f;
 
         // Flee from mouse
         // For the flee direction find the closest point on the line
@@ -101,13 +102,19 @@ void Swarm::update(float dt, glm::vec3 ro, glm::vec3 rd, bool flee) {
             glm::vec3 fleedir = normalizeNoNaN(boids[i].position - closest);
             glm::vec3 fleeing = fleedir - boids[i].velocity; // Steer away from the the line
             force += fleeing * config.fleeFactor;
+            boids[i].excitement = glm::gaussRand(1.f, config.excitementVariance);
         }
+
+        // Attraction to spawn
+        float distspawn = glm::length(glm::vec3(config.spawn) - boids[i].position) - config.spawn.w;
+        if (boids[i].excitement <= config.returnTime) force += (glm::vec3(config.spawn) + glm::ballRand(config.spawn.w) - boids[i].position);
 
         // Move
         boids[i].velocity = normalizeNoNaN(boids[i].velocity * config.forwardFactor + force);
         boids[i].phase += glm::length(boids[i].velocity) * dt * config.speed;
         boids[i].phase = mod(boids[i].phase, two_pi<float>());
-        boids[i].position = boids[i].position + boids[i].velocity * dt * config.speed;
+        if (distspawn > 0.f || boids[i].excitement > 0.f) boids[i].position = boids[i].position + boids[i].velocity * dt * config.speed * (1.f + boids[i].excitement * config.excitementFactor);
+        boids[i].excitement = std::max(0.f, boids[i].excitement - dt * config.excitementDecay);
     }
 }
 

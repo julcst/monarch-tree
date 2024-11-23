@@ -15,10 +15,14 @@ struct SwarmConfig {
     float separationFactor = 0.5f;
     float alignmentFactor = 0.5f;
     float cohesionFactor = 0.5f;
-    float randomFactor = 0.25f;
+    float randomFactor = 0.1f;
     float forwardFactor = 2.0f;
     float fleeFactor = 10.0f;
-    glm::vec4 spawn = glm::vec4(0.0f, 0.5f, 0.0f, 2.0f);
+    float excitementVariance = 0.4f;
+    float excitementFactor = 1.0f;
+    float excitementDecay = 0.1f;
+    float returnTime = 0.1f;
+    glm::vec4 spawn = glm::vec4(0.0f, 5.0f, 0.0f, 2.0f);
     glm::vec4 bound = glm::vec4(0.0f, 10.0f, 0.0f, 10.0f);
 };
 

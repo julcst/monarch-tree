@@ -93,12 +93,22 @@ void MainApp::keyCallback(Key key, Action action, Modifier modifier) {
     if (key == Key::ESC && action == Action::PRESS) close();
 }
 
+void MainApp::clickCallback(Button button, Action action, Modifier modifier) {
+    if (button == Button::RIGHT && action == Action::PRESS) {
+        const vec4 cursorClip = vec4(convertCursorToClipSpace(), 1.0f, 1.0f);
+        const vec4 cursorWorld = inverse(camera.projectionMatrix * camera.viewMatrix) * cursorClip;
+        const vec3 origin = camera.worldPosition;
+        const vec3 direction = normalize(vec3(cursorWorld) / cursorWorld.w - origin);
+        swarm.update(delta, origin, direction, true);
+    }
+}
+
 void MainApp::scrollCallback(float amount) {
     camera.zoom(amount);
 }
 
 void MainApp::moveCallback(const vec2& movement, bool leftButton, bool rightButton, bool middleButton) {
-    if (leftButton || rightButton || middleButton) camera.orbit(movement * 0.02f);
+    if (leftButton || middleButton) camera.orbit(movement * 0.02f);
 }
 
 void MainApp::buildImGui() {
