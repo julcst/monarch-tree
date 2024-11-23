@@ -39,6 +39,7 @@ namespace Tree {
         Config config;
         Generator(const Config& config, unsigned int seed = 42);
         Model generate();
+        void shuffle();
     private:
         unsigned int seed;
     };

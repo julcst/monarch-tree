@@ -37,6 +37,7 @@ MainApp::MainApp() : App(800, 600), treeGenerator(Tree::Config {507, 0.3f, 1.0f}
 
     tree = treeGenerator.generate();
     camera.target.y = tree.aabb.min.y + 0.5f * (tree.aabb.max.y - tree.aabb.min.y);
+    camera.worldPosition = vec3(20.0f, 0.0f, 0.0f);
     camera.invalidate();
     uploadTreeData(tree, treeBuffer);
 }
@@ -86,6 +87,11 @@ void MainApp::buildImGui() {
     changed |= ImGui::SliderFloat("random", &treeGenerator.config.randomFactor, 0.0f, 1.0f);
     changed |= ImGui::SliderFloat("spread", &treeGenerator.config.spreadFactor, 0.0f, 1.0f);
     ImGui::Checkbox("fixed", &treeGenerator.config.fixedSeed);
+    ImGui::SameLine();
+    if (ImGui::Button("Shuffle")) {
+        treeGenerator.shuffle();
+        changed = true;
+    }
     if (changed) {
         tree = treeGenerator.generate();
         camera.target.y = tree.aabb.min.y + 0.5f * (tree.aabb.max.y - tree.aabb.min.y);

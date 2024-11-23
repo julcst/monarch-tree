@@ -20,8 +20,12 @@ float radius(float area) { return sqrt(area / pi<float>()); }
 float scaleArea(float r, float f) { return r * sqrt(f); } /* Result of radius(area(r)*f) */
 bool compare(Particle a, Particle b) { return a.age > b.age; }
 
+void Generator::shuffle() {
+    seed += 1;
+}
+
 Model Generator::generate() {
-    if (!config.fixedSeed) seed += 1;
+    if (!config.fixedSeed) shuffle();
     srand(seed);
 
     Model model;
