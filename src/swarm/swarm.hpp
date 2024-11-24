@@ -10,6 +10,7 @@ struct SwarmConfig {
     float viewRange = 3.0f;
     float viewAngle = 1.0f;
     float separationRange = 1.0f;
+    size_t neighborLimit = 128;
     float speed = 10.0f;
     float separationFactor = 0.5f;
     float alignmentFactor = 0.5f;

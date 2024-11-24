@@ -30,7 +30,7 @@ void Swarm::update(float dt, glm::vec3 ro, glm::vec3 rd, bool flee) {
     // Hash all boids
     SpatialHash hash(config.viewRange);
     // TODO: Limit the number of boids in a cell
-    for (Boid b : boids) hash.add(b, 128);
+    for (Boid b : boids) hash.add(b, config.neighborLimit);
 
     float sqrange = config.viewRange * config.viewRange; // Squaring for faster comparisons
     float viewangle = glm::cos(config.viewAngle); // Cosine of view angle

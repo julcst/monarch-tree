@@ -148,9 +148,10 @@ void MainApp::buildImGui() {
         bool changed = false;
         changed |= ImGui::SliderInt("Boids", (int*)&swarm.config.nBoids, 1, MAX_BOIDS);
         ImGui::SeparatorText("View");
-        changed |= ImGui::SliderFloat("View Range", &swarm.config.viewRange, 0.0f, 10.0f);
+        changed |= ImGui::SliderFloat("Separation Range", &swarm.config.separationRange, 0.0f, swarm.config.viewRange);
+        changed |= ImGui::SliderFloat("View Range", &swarm.config.viewRange, swarm.config.separationRange, 10.0f);
         changed |= ImGui::SliderAngle("View Angle", &swarm.config.viewAngle, 0.0f, 180.0f);
-        changed |= ImGui::SliderFloat("Separation Range", &swarm.config.separationRange, 0.0f, 10.0f);
+        changed |= ImGui::SliderInt("Neighbors", (int*)&swarm.config.neighborLimit, 1, 128);
         ImGui::SeparatorText("Forces");
         changed |= ImGui::SliderFloat("Speed", &swarm.config.speed, 0.0f, 10.0f);
         changed |= ImGui::SliderFloat("Separation", &swarm.config.separationFactor, 0.0f, 1.0f);
@@ -160,6 +161,10 @@ void MainApp::buildImGui() {
         changed |= ImGui::SliderFloat("Forward", &swarm.config.forwardFactor, 0.0f, 2.0f);
         ImGui::SeparatorText("Interaction");
         changed |= ImGui::SliderFloat("Impact", &swarm.config.fleeFactor, -20.0f, 20.0f);
+        changed |= ImGui::SliderFloat("Excitement", &swarm.config.excitementFactor, 0.0f, 1.0f);
+        changed |= ImGui::SliderFloat("Variance", &swarm.config.excitementVariance, 0.0f, 1.0f);
+        changed |= ImGui::SliderFloat("Decay", &swarm.config.excitementDecay, 0.0f, 1.0f);
+        changed |= ImGui::SliderFloat("Return Time", &swarm.config.returnTime, 0.0f, 1.0f);
         ImGui::SeparatorText("Generation");
         if (ImGui::Button("Reset")) {
             swarm.reset();
