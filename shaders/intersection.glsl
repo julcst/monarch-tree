@@ -37,7 +37,7 @@ vec4 iBranch(Ray ray, Branch branch) {
     float h = k1*k1 - k0*k2;
     if (h < 0.0) return NO_HIT;
     float t = (-sqrt(h) - k1) / k2;
-    if (t < 0.0) return NO_HIT;
+    //if (t < 0.0) return NO_HIT;
     float y = m1 - branch.a.w*rr + t*m2;
     if (y > 0.0 && y < d2) return vec4(t, normalize(d2*(oa + t*ray.direction) - ba*y));
     
