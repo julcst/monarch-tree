@@ -38,13 +38,14 @@ MainApp::MainApp() : App(800, 600), treeGenerator(Tree::Config {507, 0.3f, 1.0f}
     treeBuffer.bind(0);
 
     const std::vector<float> boidVertices = {
-        -0.1f, 0.0f, -0.1f,
+        -0.01f, 0.0f, 0.0f,
         -0.1f, 0.0f,  0.1f,
-         0.0f, 0.0f,  0.0f,
-         0.1f, 0.0f,  0.1f,
+        -0.1f, 0.0f, -0.1f,
+         0.01f, 0.0f, 0.0f,
          0.1f, 0.0f, -0.1f,
+         0.1f, 0.0f,  0.1f,
     };
-    const std::vector<uint> boidIndices = {0, 1, 2, 2, 3, 4};
+    const std::vector<uint> boidIndices = {2, 1, 0, 5, 4, 3};
     boidMesh.load(boidVertices, boidIndices);
     boidShader.load("shaders/boid.vert", "shaders/boid.frag");
     boidShader.bindUBO("Swarm", 1);
@@ -78,7 +79,7 @@ void MainApp::render() {
         swarm.update(delta);
         swarmBuffer.set(swarm.boids, 0);
     }
-
+    
     glDepthFunc(GL_LESS);
     boidShader.use();
     boidMesh.draw(swarm.config.nBoids);

@@ -33,7 +33,7 @@ void main() {
     vec3 vertex = _position;
     
     // Rotation around z-axis
-    float angle = boid.phase * sign(vertex.x);
+    float angle = sin(boid.phase) * sign(vertex.x);
     mat3 flap = mat3(
         vec3(cos(angle), sin(angle), 0.0),
         vec3(-sin(angle), cos(angle), 0.0),
