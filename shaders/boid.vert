@@ -31,8 +31,18 @@ void main() {
     mat3 rotation = buildOrthonormalBasis(forward, up);
 
     vec3 vertex = _position;
-    vertex.y = sin(boid.phase) * abs(vertex.x) * 3.0;
+    
+    // Rotation around z-axis
+    float angle = boid.phase * sign(vertex.x);
+    mat3 flap = mat3(
+        vec3(cos(angle), sin(angle), 0.0),
+        vec3(-sin(angle), cos(angle), 0.0),
+        vec3(0.0, 0.0, 1.0)
+    );
 
-    normal = rotation[1];
-    gl_Position = uWorldToClip * vec4(rotation * vertex + boid.position, 1.0);
+    mat3 localToWorld = rotation * flap;
+    normal = localToWorld * vec3(0.0, 1.0, 0.0);
+    vertex = localToWorld * vertex + boid.position;
+
+    gl_Position = uWorldToClip * vec4(vertex, 1.0);
 }

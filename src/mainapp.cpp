@@ -122,7 +122,7 @@ void MainApp::buildImGui() {
 
     if (ImGui::CollapsingHeader("Tree")) {
         bool changed = false;
-        changed |= ImGui::SliderInt("n", reinterpret_cast<int*>(&treeGenerator.config.nBranches), 1, MAX_BRANCHES);
+        changed |= ImGui::SliderInt("Branches", reinterpret_cast<int*>(&treeGenerator.config.nBranches), 1, MAX_BRANCHES);
         changed |= ImGui::SliderFloat("Length", &treeGenerator.config.segmentLength, 0.1f, 1.0f);
         ImGui::SeparatorText("Factors");
         changed |= ImGui::SliderFloat("Forward", &treeGenerator.config.forwardFactor, 0.0f, 1.0f);
@@ -146,7 +146,7 @@ void MainApp::buildImGui() {
 
     if (ImGui::CollapsingHeader("Swarm")) {
         bool changed = false;
-        changed |= ImGui::SliderInt("n", (int*)&swarm.config.nBoids, 1, MAX_BOIDS);
+        changed |= ImGui::SliderInt("Boids", (int*)&swarm.config.nBoids, 1, MAX_BOIDS);
         ImGui::SeparatorText("View");
         changed |= ImGui::SliderFloat("View Range", &swarm.config.viewRange, 0.0f, 10.0f);
         changed |= ImGui::SliderAngle("View Angle", &swarm.config.viewAngle, 0.0f, 180.0f);

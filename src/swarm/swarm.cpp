@@ -102,7 +102,7 @@ void Swarm::update(float dt, glm::vec3 ro, glm::vec3 rd, bool flee) {
             glm::vec3 fleedir = normalizeNoNaN(boids[i].position - closest);
             glm::vec3 fleeing = fleedir - boids[i].velocity; // Steer away from the the line
             force += fleeing * config.fleeFactor;
-            boids[i].excitement = glm::gaussRand(1.f, config.excitementVariance);
+            boids[i].excitement = glm::gaussRand(1.0f, config.excitementVariance);
         }
 
         // Attraction to spawn
