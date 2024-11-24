@@ -1,10 +1,9 @@
 #pragma once
 
-#include <unordered_map>
 #include <vector>
+#include <random>
+
 #include <glm/glm.hpp>
-#define GLM_ENABLE_EXPERIMENTAL
-#include <glm/gtx/hash.hpp>
 
 struct SwarmConfig {
     unsigned int nBoids = 1024;
@@ -33,21 +32,11 @@ struct Boid {
     float excitement;
 };
 
-class SpatialHash {
-    private:
-        std::unordered_map<glm::ivec3, std::vector<Boid>> map;
-    public:
-        float radius;
-        void add(Boid b);
-        void iterateNeighbors(const Boid b, const std::function<void(const Boid)>& callback);
-        void reset(float radius);
-        SpatialHash(float radius);
-};
-
 struct Swarm {
   public:
     SwarmConfig config;
     std::vector<Boid> boids;
+    std::default_random_engine rng;
 
     Swarm() = default;
     Swarm(SwarmConfig config);

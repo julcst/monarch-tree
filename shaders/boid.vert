@@ -14,7 +14,7 @@ struct Boid {
 };
 
 layout(std140) uniform Swarm {
-    Boid[1024] uBoids;
+    Boid[2048] uBoids;
 };
 
 mat3 buildOrthonormalBasis(vec3 forward, vec3 up) {

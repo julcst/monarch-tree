@@ -21,7 +21,7 @@
 using namespace glm;
 
 constexpr size_t MAX_BRANCHES = 1024;
-constexpr size_t MAX_BOIDS = 1024;
+constexpr size_t MAX_BOIDS = 2048;
 
 void uploadTreeData(const Tree::Model& tree, Buffer<GL_UNIFORM_BUFFER>& treeBuffer) {
     treeBuffer.set(tree.aabb.min, 0);
