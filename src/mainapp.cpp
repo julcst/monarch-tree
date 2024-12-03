@@ -167,7 +167,15 @@ void MainApp::buildImGui() {
         changed |= ImGui::SliderFloat("Forward", &swarm.config.forwardFactor, 0.0f, 2.0f);
         ImGui::SeparatorText("Interaction");
         changed |= ImGui::SliderFloat("Impact", &swarm.config.fleeFactor, -20.0f, 20.0f);
-        ImGui::SeparatorText("Generation");
+        ImGui::SeparatorText("Excitement");
+        changed |= ImGui::SliderFloat("Max Move Radius", &swarm.config.maxMoveRadius, 0.0f, 100.0f);
+        changed |= ImGui::SliderFloat("Max Move Time", &swarm.config.maxMoveTime, 0.0f, 20.0f);
+        changed |= ImGui::SliderFloat("Variance", &swarm.config.excitementVariance, 0.0f, 1.0f);
+        changed |= ImGui::SliderFloat("Mean", &swarm.config.excitementMean, 0.0f, 1.0f);
+        changed |= ImGui::SliderFloat("Speed Boost", &swarm.config.excitementSpeedBoost, 0.0f, 10.0f);
+        ImGui::SeparatorText("Homing");
+        changed |= ImGui::SliderFloat("Speed", &swarm.config.homingSpeed, 0.0f, 1.0f);
+        changed |= ImGui::SliderFloat("Pressure", &swarm.config.homingPressure, 0.0f, 1.0f);
         if (ImGui::Button("Reset")) {
             swarm.reset();
             changed = true;

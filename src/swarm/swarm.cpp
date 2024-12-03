@@ -112,19 +112,23 @@ void Swarm::update(float dt) {
         glm::vec3 home = homes.at(i);
         glm::vec3 homing = glm::vec3(home) - boid.position;
         float distHome = glm::length(homing);
-        float moveRadius = boid.excitement;
-        if (distHome > moveRadius) force += homing * (distHome - moveRadius) * (distHome - moveRadius) * 0.001f;
+        float moveRadius = std::max(boid.excitement * config.maxMoveRadius, 0.1f);
 
-        boid.velocity = normalizeNoNaN(boid.velocity * config.forwardFactor + force);
+        if (distHome > moveRadius) {
+            boid.velocity = normalizeNoNaN(homing);
+        } else {
+            float relativeDist = distHome / moveRadius;
+            force += homing * relativeDist * relativeDist * config.homingPressure;
+            boid.velocity = normalizeNoNaN(boid.velocity * config.forwardFactor + force);
+        }
 
         boid.phase += glm::length(boid.velocity) * dt * config.speed;
         boid.phase = mod(boid.phase, two_pi<float>());
 
         // Move
-        float speed = dt * config.speed;
-        if (distHome < 0.1f && moveRadius < 0.1f) speed = 0.0f;
+        float speed = std::min(dt * config.speed * (1.0f + boid.excitement * config.excitementSpeedBoost), (distHome + moveRadius) * config.homingSpeed);
         boid.position = boid.position + boid.velocity * speed;
-        boid.excitement = std::max(0.0f, boid.excitement - dt);
+        boid.excitement = std::max(0.0f, boid.excitement - dt / config.maxMoveTime);
     }
 }
 
@@ -134,7 +138,7 @@ void Swarm::flee(glm::vec3 ro, glm::vec3 rd) {
         glm::vec3 fleedir = normalizeNoNaN(boid.position - closest);
         glm::vec3 fleeing = fleedir - boid.velocity; // Steer away from the the line
         boid.velocity += fleeing * std::gamma_distribution<float>(2.0f, 1.0f)(rng);
-        boid.excitement = std::gamma_distribution<float>(2.0f, 0.2f)(rng);
+        boid.excitement = std::clamp(std::uniform_real_distribution<float>(config.excitementMean, config.excitementVariance)(rng), 0.0f, 1.0f);
     }
 }
 
