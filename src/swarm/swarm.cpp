@@ -13,30 +13,59 @@
 
 #include "util.hpp"
 #include "swarm/spatialhash.hpp"
+#include "tree/model.hpp"
 
-/* Simple boid flocking implementation.
- * Based on the amazing paper "Steering Behaviors For Autonomous Characters" by Craig W. Reynolds */
-void Swarm::update(float dt, glm::vec3 ro, glm::vec3 rd, bool flee) {
+void Swarm::spawn(const Tree::Model& tree, bool replaceHomes) {
+    if (replaceHomes) homes.clear();
+
+    if (config.nBoids < homes.size()) {
+        homes.erase(homes.begin() + config.nBoids, homes.end());
+    } else if (config.nBoids > homes.size()) {
+        homes.reserve(config.nBoids);
+
+        auto randBranch = std::uniform_int_distribution<size_t>(0, tree.branches.size() - 1);
+
+        for (size_t i = homes.size(); i < config.nBoids; i++) {
+            // Pick a random branch
+            const auto branch = Tree::BranchSDF(tree.branches[randBranch(rng)]);
+            // Pick random initial home
+            auto aabb = AABB(branch.branch.start); aabb.add(branch.branch.end);
+            glm::vec3 home = glm::linearRand(vec3(aabb.min), vec3(aabb.max));
+            for (int j = 0; j < 10; j++) {
+                vec3 step = branch.calcScaledNormal(home);
+                home -= step;
+                if (glm::length2(step) < 1.e-4f) break;
+            }
+            homes.push_back(home);
+        }
+    }
+
     if (config.nBoids < boids.size()) {
         boids.erase(boids.begin() + config.nBoids, boids.end());
     } else if (config.nBoids > boids.size()) {
         boids.reserve(config.nBoids);
-        for (unsigned int i = boids.size(); i < config.nBoids; i++) {
-            boids.emplace_back(glm::ballRand(config.spawn.w) + glm::vec3(config.spawn), glm::linearRand(0.0f, two_pi<float>()), glm::sphericalRand(1.0f), 0.0f);
+        for (size_t i = boids.size(); i < config.nBoids; i++) {
+            boids.emplace_back(homes.at(i), glm::linearRand(0.0f, two_pi<float>()), glm::sphericalRand(1.0f), 0.0f);
         }
     }
+}
 
-    std::ranges::shuffle(boids, rng);
+/* Simple boid flocking implementation.
+ * Based on the amazing paper "Steering Behaviors For Autonomous Characters" by Craig W. Reynolds */
+void Swarm::update(float dt) {
+    auto shuffled(boids);
+    std::ranges::shuffle(shuffled, rng);
     // Hash all boids
     SpatialHash hash(config.viewRange);
     // TODO: Limit the number of boids in a cell
-    for (Boid b : boids) hash.add(b, config.neighborLimit);
+    for (Boid b : shuffled) hash.add(b, config.neighborLimit);
 
     float sqrange = config.viewRange * config.viewRange; // Squaring for faster comparisons
     float viewangle = glm::cos(config.viewAngle); // Cosine of view angle
     float seprange = config.separationRange * config.separationRange; // Squaring for faster comparisons
 
-    for (auto& boid : boids) {
+    for (size_t i = 0; i < boids.size(); i++) {
+        Boid& boid = boids.at(i);
         glm::vec3 separation(0.f), alignment(0.f), cohesion(0.f);
         float nSeparation = 0.f, nCohesion = 0.f;
 
@@ -49,7 +78,7 @@ void Swarm::update(float dt, glm::vec3 ro, glm::vec3 rd, bool flee) {
             for (const Boid& other : hash.map[neighborCell]) {
                 float sqdist = glm::distance2(boid.position, other.position); // Squared distance between boid and neighbor
                 if (sqdist > sqrange) continue;; // Neighbor is out of visual range
-                if (sqdist < 0.0001f) continue; // Neighbor is self (or very close)
+                if (sqdist < 1.e-4f) continue; // Neighbor is self (or very close)
                 glm::vec3 dir = (other.position - boid.position) / glm::sqrt(sqdist); // Direction from boid to neighbor
                 if (sqdist < seprange) { // Neighbor is too close => separate
                     separation -= dir;
@@ -79,31 +108,33 @@ void Swarm::update(float dt, glm::vec3 ro, glm::vec3 rd, bool flee) {
             force += cohesion * config.cohesionFactor;
         }
 
-        // Bounding sphere
-        glm::vec3 bounddir = glm::vec3(config.bound) - boid.position;
-        float distbound = glm::length(bounddir) - config.bound.w;
-        if (distbound > 0.0f) force += bounddir * distbound * 0.001f;
+        // Return home
+        glm::vec3 home = homes.at(i);
+        glm::vec3 homing = glm::vec3(home) - boid.position;
+        float distHome = glm::length(homing);
+        float moveRadius = boid.excitement;
+        if (distHome > moveRadius) force += homing * (distHome - moveRadius) * (distHome - moveRadius) * 0.001f;
 
-        // Flee from mouse
-        // For the flee direction find the closest point on the line
-        if (flee) {
-            glm::vec3 closest = glm::dot(boid.position - ro, rd) * rd + ro;
-            glm::vec3 fleedir = normalizeNoNaN(boid.position - closest);
-            glm::vec3 fleeing = fleedir - boid.velocity; // Steer away from the the line
-            force += fleeing * config.fleeFactor;
-            boid.excitement = glm::gaussRand(1.0f, config.excitementVariance);
-        }
-
-        // Attraction to spawn
-        float distspawn = glm::length(glm::vec3(config.spawn) - boid.position) - config.spawn.w;
-        if (boid.excitement <= config.returnTime) force += (glm::vec3(config.spawn) + glm::ballRand(config.spawn.w) - boid.position);
-
-        // Move
         boid.velocity = normalizeNoNaN(boid.velocity * config.forwardFactor + force);
+
         boid.phase += glm::length(boid.velocity) * dt * config.speed;
         boid.phase = mod(boid.phase, two_pi<float>());
-        if (distspawn > 0.f || boid.excitement > 0.f) boid.position = boid.position + boid.velocity * dt * config.speed * (1.f + boid.excitement * config.excitementFactor);
-        boid.excitement = std::max(0.f, boid.excitement - dt * config.excitementDecay);
+
+        // Move
+        float speed = dt * config.speed;
+        if (distHome < 0.1f && moveRadius < 0.1f) speed = 0.0f;
+        boid.position = boid.position + boid.velocity * speed;
+        boid.excitement = std::max(0.0f, boid.excitement - dt);
+    }
+}
+
+void Swarm::flee(glm::vec3 ro, glm::vec3 rd) { 
+    for (auto& boid : boids) {
+        glm::vec3 closest = glm::dot(boid.position - ro, rd) * rd + ro;
+        glm::vec3 fleedir = normalizeNoNaN(boid.position - closest);
+        glm::vec3 fleeing = fleedir - boid.velocity; // Steer away from the the line
+        boid.velocity += fleeing * std::gamma_distribution<float>(2.0f, 1.0f)(rng);
+        boid.excitement = std::gamma_distribution<float>(2.0f, 0.2f)(rng);
     }
 }
 

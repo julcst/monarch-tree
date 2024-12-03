@@ -13,8 +13,15 @@
 namespace Tree {
 
     struct Branch {
+        Branch(const glm::vec4& start, const glm::vec4& end) : start(start), end(end) {}
         glm::vec4 start;
         glm::vec4 end;
+    };
+
+    struct BranchSDF : public SDF {
+        BranchSDF(const Branch& branch) : branch(branch) {}
+        const Branch& branch;
+        float calcSignedDistance(const glm::vec3& position) const override;
     };
 
     /*

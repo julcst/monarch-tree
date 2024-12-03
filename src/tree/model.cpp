@@ -25,7 +25,7 @@ void Model::addBranch(const Branch& branch) {
  * (https://www.shadertoy.com/view/tdXGWr)
  * Published 2018 by Inigo Quilez under MIT License
  */
-float sdBranch(const vec3& p, const Branch& branch) {
+float BranchSDF::calcSignedDistance(const vec3& p) const {
     // sampling independent computations (only depend on shape)
     vec3  ba = vec3(branch.end) - vec3(branch.start);
     float l2 = dot(ba, ba);
@@ -52,7 +52,7 @@ float sdBranch(const vec3& p, const Branch& branch) {
 float Model::calcSignedDistance(const vec3& position) const {
     float dist = std::numeric_limits<float>::infinity();
     for (Branch branch : branches) {
-        dist = min(dist, sdBranch(position, branch));
+        dist = min(dist, BranchSDF(branch).calcSignedDistance(position));
     }
     return dist;
 }

@@ -64,7 +64,7 @@ Model Generator::generate() {
         }
 
         // Add branch to tree
-        model.addBranch(Branch { vec4(particle.position, particle.radius), vec4(endpoint, radius) });
+        model.addBranch(Branch(vec4(particle.position, particle.radius), vec4(endpoint, radius)));
     }
 
     return model;

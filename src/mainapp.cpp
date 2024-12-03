@@ -34,8 +34,10 @@ MainApp::MainApp() : App(800, 600), treeGenerator(Tree::Config {507, 0.3f, 1.0f}
     fullscreenTriangle.load(Mesh::FULLSCREEN_VERTICES, Mesh::FULLSCREEN_INDICES);
     treeShader.load("shaders/raygen.vert", "shaders/raycast.frag");
     treeShader.bindUBO("Tree", 0);
-    treeBuffer.allocate(MAX_BRANCHES * sizeof(vec4));
+    treeBuffer.allocate(MAX_BRANCHES * sizeof(vec4) * 2 + 2 * sizeof(vec4));
     treeBuffer.bind(0);
+
+    std::printf("sizeof(Branch) = %lu\n", sizeof(Tree::Branch) / sizeof(float));
 
     const std::vector<float> boidVertices = {
         -0.01f, 0.0f, 0.0f,
@@ -57,6 +59,8 @@ MainApp::MainApp() : App(800, 600), treeGenerator(Tree::Config {507, 0.3f, 1.0f}
     camera.worldPosition = vec3(20.0f, 0.0f, 0.0f);
     camera.invalidate();
     uploadTreeData(tree, treeBuffer);
+
+    swarm.spawn(tree, true);
 
     glEnable(GL_DEPTH_TEST);
 }
@@ -100,7 +104,7 @@ void MainApp::clickCallback(Button button, Action action, Modifier modifier) {
         const vec4 cursorWorld = inverse(camera.projectionMatrix * camera.viewMatrix) * cursorClip;
         const vec3 origin = camera.worldPosition;
         const vec3 direction = normalize(vec3(cursorWorld) / cursorWorld.w - origin);
-        swarm.update(delta, origin, direction, true);
+        swarm.flee(origin, direction);
     }
 }
 
@@ -141,6 +145,7 @@ void MainApp::buildImGui() {
             tree = treeGenerator.generate();
             camera.target.y = tree.aabb.min.y + 0.5f * (tree.aabb.max.y - tree.aabb.min.y);
             camera.invalidate();
+            swarm.spawn(tree, true);
             uploadTreeData(tree, treeBuffer);
         }
     }
@@ -162,15 +167,12 @@ void MainApp::buildImGui() {
         changed |= ImGui::SliderFloat("Forward", &swarm.config.forwardFactor, 0.0f, 2.0f);
         ImGui::SeparatorText("Interaction");
         changed |= ImGui::SliderFloat("Impact", &swarm.config.fleeFactor, -20.0f, 20.0f);
-        changed |= ImGui::SliderFloat("Excitement", &swarm.config.excitementFactor, 0.0f, 1.0f);
-        changed |= ImGui::SliderFloat("Variance", &swarm.config.excitementVariance, 0.0f, 1.0f);
-        changed |= ImGui::SliderFloat("Decay", &swarm.config.excitementDecay, 0.0f, 1.0f);
-        changed |= ImGui::SliderFloat("Return Time", &swarm.config.returnTime, 0.0f, 1.0f);
         ImGui::SeparatorText("Generation");
         if (ImGui::Button("Reset")) {
             swarm.reset();
             changed = true;
         }
+        if (changed) swarm.spawn(tree, false);
     }
 
     ImGui::End();
