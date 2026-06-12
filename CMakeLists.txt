@@ -17,7 +17,7 @@ include(FetchContent)
 FetchContent_Declare(
     framework
     #GIT_REPOSITORY https://github.com/julcst/gltemplate/
-    URL https://github.com/julcst/gltemplate/archive/v1.5.tar.gz
+    URL https://github.com/julcst/gltemplate/archive/v1.8.tar.gz
 )
 FetchContent_MakeAvailable(framework)
 

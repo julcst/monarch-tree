@@ -5,7 +5,7 @@
 
 #include "swarm/swarm.hpp"
 
-#include <glad/glad.h>
+#include <glad/gl.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -108,8 +108,8 @@ void MainApp::clickCallback(Button button, Action action, Modifier modifier) {
     }
 }
 
-void MainApp::scrollCallback(float amount) {
-    camera.zoom(amount);
+void MainApp::scrollCallback(float x, float y) {
+    camera.zoom(y);
 }
 
 void MainApp::moveCallback(const vec2& movement, bool leftButton, bool rightButton, bool middleButton) {

@@ -20,7 +20,7 @@ protected:
     void resizeCallback(const vec2& res) override;
     void keyCallback(Key key, Action action, Modifier modifier) override;
     void clickCallback(Button button, Action action, Modifier modifier) override;
-    void scrollCallback(float amount) override;
+    void scrollCallback(float x, float y) override;
     void moveCallback(const vec2& movement, bool leftButton, bool rightButton, bool middleButton) override;
 private:
     Camera camera;
